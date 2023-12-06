@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.ls.LSOutput;
 import pieces.*;
 
 import javax.swing.*;
@@ -9,7 +10,8 @@ import java.util.ArrayList;
 public class Board extends JPanel {
 
     public int tileSize = 85;
-
+    // access static variable
+    int moveCount = Main.moveCount;
     int files = 8;
     int ranks = 8;
     ArrayList<Piece> pieceList = new ArrayList<>();
@@ -24,6 +26,8 @@ public class Board extends JPanel {
     public int enPassantTile = -1;
 
     public Board() {
+        System.out.println("moveCount: " + moveCount);
+
         this.setPreferredSize(new Dimension(ranks * tileSize, files * tileSize));
         this.addMouseListener(input);
         this.addMouseMotionListener(input);
@@ -43,13 +47,19 @@ public class Board extends JPanel {
 
     }
 
+
     public void makeMove(Move move){
         if(move.piece.name.equals("Pawn")){
             movePawn(move);
+            moveCount++;
+            System.out.println("moveCount: " + moveCount);
         }
         else if (move.piece.name.equals("King")) {
             moveKing(move);
+            moveCount++;
         }
+        moveCount++;
+        System.out.println("moveCount: " + moveCount);
             move.piece.file = move.newFile;
             move.piece.rank = move.newRank;
             move.piece.xPos = move.newFile * tileSize;

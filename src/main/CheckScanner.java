@@ -111,5 +111,41 @@ public class CheckScanner {
     private boolean checkPawn(Piece p, Piece k, int file, int rank) {
         return p != null && !board.sameTeam(p, k) && p.name.equals("Pawn") && p.file == file && p.rank == rank;
     }
+    //checkmate
+    public boolean isCheckMate(boolean isWhite){
+        Piece king = board.findKing(isWhite);
+        assert king != null;
+        int kingFile = king.file;
+        int kingRank = king.rank;
+        if (king.isFirstMove){
+            return false;
+        }
+        if (board.checkScanner.isKingChecked(new Move(board,king, kingFile + 1, kingRank)) &&
+                board.checkScanner.isKingChecked(new Move(board,king, kingFile + 1, kingRank + 1)) &&
+                board.checkScanner.isKingChecked(new Move(board,king, kingFile, kingRank + 1)) &&
+                board.checkScanner.isKingChecked(new Move(board,king, kingFile - 1, kingRank + 1)) &&
+                board.checkScanner.isKingChecked(new Move(board,king, kingFile - 1, kingRank)) &&
+                board.checkScanner.isKingChecked(new Move(board,king, kingFile - 1, kingRank - 1)) &&
+                board.checkScanner.isKingChecked(new Move(board,king, kingFile, kingRank - 1)) &&
+                board.checkScanner.isKingChecked(new Move(board,king, kingFile + 1, kingRank - 1))){
+            System.out.println("Stalemate");
+            return true;
+        }
+        for (Piece piece : board.pieceList){
+            if (piece.isWhite == isWhite){
+                for (int i = 0; i < board.files; i++){
+                    for (int j = 0; j < board.ranks; j++){
+                        if (piece.isValidMovement(i,j) && !board.checkScanner.isKingChecked(new Move(board,piece, i, j))){
+                            System.out.println("Not Checkmate");
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println("Checkmate");
+        return true;
+
+    }
 
 }
